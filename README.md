@@ -48,7 +48,7 @@ flowchart TD
    - Models trained exclusively on `train_mask` with early stopping based on `val_mask` loss/accuracy.
    - Test set (`test_mask`) evaluated **strictly once** using the restored best validation checkpoint.
    - Statistical evaluation across 5 random seeds (`42, 123, 456, 789, 2026`) reporting Mean ± Standard Deviation.
-   - **Latency Methodology**: Inference latency was measured on CPU after 5 warm-up passes and averaged across 100 forward passes per seed run. Environment metadata is saved to [`results/environment_metadata.json`](file:///C:/Users/SHIVANGI/.gemini/antigravity/scratch/GNN-Citation-Network-Classification/results/environment_metadata.json).
+   - **Latency Methodology**: Inference latency was measured on CPU after 5 warm-up passes and averaged across 100 forward passes per seed run. Environment metadata is saved to [`results/environment_metadata.json`](results/environment_metadata.json).
 
 4. **Explicit Synthetic Mode**:
    - Includes `--synthetic` flag for reproducible CI and offline testing without silent fallback masking.

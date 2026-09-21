@@ -136,6 +136,7 @@ class BenchmarkRunner:
 
         # Environment metadata
         import platform
+
         import torch
         import torch_geometric
 
