@@ -28,7 +28,7 @@ flowchart TD
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features & Dataset Specifications
 
 1. **Multi-Model Benchmark Suite**:
    - **MLP Baseline**: 2-layer feature classifier ignoring graph edges to isolate structural message-passing gains.
@@ -36,12 +36,21 @@ flowchart TD
      $$H^{(l+1)} = \sigma \left( \tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} H^{(l)} W^{(l)} \right)$$
    - **GraphSAGE**: Inductive feature aggregation over localized node neighborhoods.
 
-2. **Rigorous Evaluation Methodology**:
+2. **Official Planetoid Dataset Specifications**:
+   - Evaluated on official PyTorch Geometric `Planetoid` dataset splits:
+   
+   | Dataset | Nodes | Edges | Features | Classes | Train Count | Val Count | Test Count | Graph Type | Features Normalization |
+   | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+   | **Cora** | 2,708 | 10,556 | 1,433 | 7 | 140 | 500 | 1,000 | Undirected | Row-Normalized |
+   | **Citeseer** | 3,327 | 9,104 | 3,703 | 6 | 120 | 500 | 1,000 | Undirected | Row-Normalized |
+
+3. **Rigorous Evaluation & Latency Methodology**:
    - Models trained exclusively on `train_mask` with early stopping based on `val_mask` loss/accuracy.
    - Test set (`test_mask`) evaluated **strictly once** using the restored best validation checkpoint.
    - Statistical evaluation across 5 random seeds (`42, 123, 456, 789, 2026`) reporting Mean ± Standard Deviation.
+   - **Latency Methodology**: Inference latency was measured on CPU after 5 warm-up passes and averaged across 100 forward passes per seed run. Environment metadata is saved to [`results/environment_metadata.json`](file:///C:/Users/SHIVANGI/.gemini/antigravity/scratch/GNN-Citation-Network-Classification/results/environment_metadata.json).
 
-3. **Explicit Synthetic Mode**:
+4. **Explicit Synthetic Mode**:
    - Includes `--synthetic` flag for reproducible CI and offline testing without silent fallback masking.
 
 ---

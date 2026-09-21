@@ -134,6 +134,26 @@ class BenchmarkRunner:
         csv_path = os.path.join(self.output_dir, "benchmark_summary.csv")
         df_summary.to_csv(csv_path, index=False)
 
+        # Environment metadata
+        import platform
+        import torch
+        import torch_geometric
+
+        env_metadata = {
+            "python_version": platform.python_version(),
+            "torch_version": torch.__version__,
+            "torch_geometric_version": torch_geometric.__version__,
+            "device": "CPU",
+            "operating_system": platform.platform(),
+            "processor": platform.processor() or "x86_64",
+            "latency_measurement_methodology": (
+                "Inference latency was measured on CPU after 5 warm-up passes "
+                "and averaged across 100 forward passes per seed run."
+            ),
+        }
+        with open(os.path.join(self.output_dir, "environment_metadata.json"), "w") as f:
+            json.dump(env_metadata, f, indent=2)
+
         # Generate Plot Artifacts
         plot_benchmark_results(df_summary, output_dir=self.output_dir)
         if sample_curves:
