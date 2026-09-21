@@ -5,15 +5,23 @@
 [![PyG](https://img.shields.io/badge/PyTorch_Geometric-PyG-blue.svg)](https://pytorch-geometric.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Modular PyTorch Geometric framework for evaluating **Multi-Layer Perceptron (MLP)**, **Graph Convolutional Networks (GCN)**, and **GraphSAGE** on academic citation networks (**Cora** and **Citeseer**). Includes multi-seed statistical validation, early-stopping validation selection, and explicit synthetic graph fallback.
+This project compares MLP, GCN, and GraphSAGE models on the Cora and Citeseer citation networks. It includes multi-seed evaluation, early stopping, reproducible configurations, and an explicit synthetic-data mode for offline testing.
+
+## Demo and results
+
+- [Portfolio project page](https://shivangisrivastava013.github.io/shivangi-portfolio/#projects)
+- [Interactive command-line demo](demo.py)
+- [Benchmark summary](results/benchmark_summary.csv)
+- [Accuracy comparison](results/accuracy_comparison.png)
+- [F1 comparison](results/f1_comparison.png)
 
 ---
 
-## 📐 System Architecture
+## System architecture
 
 ```mermaid
 flowchart TD
-    A["📜 Planetoid Citation Dataset (Cora / Citeseer)"] --> B{"Model Selection"}
+    A["Planetoid Citation Dataset (Cora / Citeseer)"] --> B{"Model Selection"}
     B -->|"Feature Only (No Edges)"| C["MLP Net (2-Layer Dense)"]
     B -->|"Spectral Convolution"| D["GCN Net (GCNConv)"]
     B -->|"Neighborhood Aggregation"| E["GraphSAGE Net (SAGEConv)"]
@@ -28,7 +36,7 @@ flowchart TD
 
 ---
 
-## 🌟 Key Features & Dataset Specifications
+## Features and dataset details
 
 1. **Multi-Model Benchmark Suite**:
    - **MLP Baseline**: 2-layer feature classifier ignoring graph edges to isolate structural message-passing gains.
@@ -55,7 +63,7 @@ flowchart TD
 
 ---
 
-## 📊 Empirical Benchmark Results (5-Seed Average)
+## Benchmark results (5-Seed Average)
 
 Generated automatically by running `python demo.py`:
 
@@ -70,7 +78,7 @@ Generated automatically by running `python demo.py`:
 
 ---
 
-## 🚀 Quickstart & Reproducible Commands
+## Getting started
 
 ### 1. Installation
 ```bash
@@ -105,7 +113,7 @@ python -m pytest tests/ -v
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ```bash
 # Build Docker Image
@@ -117,7 +125,7 @@ docker run --rm gnn-citation-classification:latest
 
 ---
 
-## 🛠️ Repository Structure
+## Repository Structure
 
 ```text
 GNN-Citation-Network-Classification/
@@ -152,6 +160,6 @@ GNN-Citation-Network-Classification/
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the [MIT License](LICENSE).
