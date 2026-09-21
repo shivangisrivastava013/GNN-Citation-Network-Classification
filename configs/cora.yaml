@@ -1,0 +1,16 @@
+dataset:
+  name: "Cora"
+  root: "./data"
+
+model:
+  hidden_channels: 64
+  dropout: 0.5
+
+training:
+  epochs: 200
+  lr: 0.01
+  weight_decay: 5e-4
+  patience: 20
+
+benchmark:
+  seeds: [42, 123, 456, 789, 2026]

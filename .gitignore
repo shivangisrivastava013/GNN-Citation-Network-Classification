@@ -2,14 +2,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.pytest_cache/
+.coverage
+htmlcov/
+
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
 /data/
-/results/*
-!/results/.gitkeep
-/weights/*
-!/weights/.gitkeep
+/weights/*.pth
 
 .env
 .venv

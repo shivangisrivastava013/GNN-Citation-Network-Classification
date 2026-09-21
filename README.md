@@ -1,52 +1,148 @@
-# Graph Neural Networks (GNN) for Citation Network Classification
+# Graph Neural Networks (GNN) Citation Network Classification & Benchmarking
 
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![PyG](https://img.shields.io/badge/PyTorch_Geometric-PyG-3B82F6?style=for-the-badge)](https://pytorch-geometric.readthedocs.io/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![CI Pipeline](https://github.com/shivangisrivastava013/GNN-Citation-Network-Classification/actions/workflows/ci.yml/badge.svg)](https://github.com/shivangisrivastava013/GNN-Citation-Network-Classification/actions/workflows/ci.yml)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg)](https://pytorch.org/)
+[![PyG](https://img.shields.io/badge/PyTorch_Geometric-PyG-blue.svg)](https://pytorch-geometric.readthedocs.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Implementation of **Graph Convolutional Networks (GCN)** and **GraphSAGE** architectures for semi-supervised node classification on academic citation networks (Cora / Citeseer datasets).
-
----
-
-## 🌟 Architecture Overview
-- **GCN (Graph Convolutional Networks):** Computes layer-wise first-order spectral graph convolutions:
-  $$H^{(l+1)} = \sigma \left( \tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} H^{(l)} W^{(l)} \right)$$
-- **GraphSAGE (Sample and Aggregate):** Inductive representation learning aggregating local neighborhood feature representations.
+Modular PyTorch Geometric framework for evaluating **Multi-Layer Perceptron (MLP)**, **Graph Convolutional Networks (GCN)**, and **GraphSAGE** on academic citation networks (**Cora** and **Citeseer**). Includes multi-seed statistical validation, early-stopping validation selection, and explicit synthetic graph fallback.
 
 ---
 
-## 📁 Repository Structure
-```text
-GNN-Citation-Network-Classification/
-├── gnn_model/              # Core GNN Modules
-│   ├── __init__.py
-│   ├── models.py           # GCN & GraphSAGE Layer Definitions
-│   └── dataset.py          # Cora Dataset & Synthetic Fallback Loader
-├── demo.py                 # Quick 1-Command Training Demo
-├── requirements.txt        # Package Dependencies
-├── .gitignore
-├── LICENSE
-└── README.md
+## 📐 System Architecture
+
+```mermaid
+flowchart TD
+    A["📜 Planetoid Citation Dataset (Cora / Citeseer)"] --> B{"Model Selection"}
+    B -->|"Feature Only (No Edges)"| C["MLP Net (2-Layer Dense)"]
+    B -->|"Spectral Convolution"| D["GCN Net (GCNConv)"]
+    B -->|"Neighborhood Aggregation"| E["GraphSAGE Net (SAGEConv)"]
+    C --> F["Trainer (Train Mask)"]
+    D --> F
+    E --> F
+    F --> G["Validation Mask Selection & Early Stopping"]
+    G --> H["Single Test Mask Evaluation"]
+    H --> I["Multi-Seed Results (Mean ± Std Dev)"]
+    I --> J["JSON, CSV & PNG Visualizations"]
 ```
 
 ---
 
-## ⚡ Quick Start
+## 🌟 Key Features
+
+1. **Multi-Model Benchmark Suite**:
+   - **MLP Baseline**: 2-layer feature classifier ignoring graph edges to isolate structural message-passing gains.
+   - **GCN**: Spectral graph convolution utilizing normalized adjacency matrices:
+     $$H^{(l+1)} = \sigma \left( \tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} H^{(l)} W^{(l)} \right)$$
+   - **GraphSAGE**: Inductive feature aggregation over localized node neighborhoods.
+
+2. **Rigorous Evaluation Methodology**:
+   - Models trained exclusively on `train_mask` with early stopping based on `val_mask` loss/accuracy.
+   - Test set (`test_mask`) evaluated **strictly once** using the restored best validation checkpoint.
+   - Statistical evaluation across 5 random seeds (`42, 123, 456, 789, 2026`) reporting Mean ± Standard Deviation.
+
+3. **Explicit Synthetic Mode**:
+   - Includes `--synthetic` flag for reproducible CI and offline testing without silent fallback masking.
+
+---
+
+## 📊 Empirical Benchmark Results (5-Seed Average)
+
+Generated automatically by running `python demo.py`:
+
+| Dataset | Model Architecture | Test Accuracy (Mean ± Std) | Macro F1 (Mean ± Std) | Weighted F1 | Inference Latency (ms) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Cora** | **MLP (Baseline)** | 0.5576 ± 0.0096 | 0.5472 ± 0.0044 | 0.5604 | 3.11 ms |
+| **Cora** | **GCN** | **0.8072 ± 0.0093** | **0.8007 ± 0.0089** | **0.8082** | 9.79 ms |
+| **Cora** | **GraphSAGE** | 0.7942 ± 0.0047 | 0.7876 ± 0.0063 | 0.7953 | 23.16 ms |
+| **Citeseer** | **MLP (Baseline)** | 0.5352 ± 0.0127 | 0.5127 ± 0.0142 | 0.5402 | 10.93 ms |
+| **Citeseer** | **GCN** | 0.6820 ± 0.0124 | 0.6457 ± 0.0106 | 0.6827 | 18.05 ms |
+| **Citeseer** | **GraphSAGE** | **0.6830 ± 0.0051** | **0.6474 ± 0.0045** | **0.6865** | 53.68 ms |
+
+---
+
+## 🚀 Quickstart & Reproducible Commands
+
+### 1. Installation
 ```bash
-# Clone repository
 git clone https://github.com/shivangisrivastava013/GNN-Citation-Network-Classification.git
 cd GNN-Citation-Network-Classification
 
-# Install dependencies
 pip install -r requirements.txt
+```
 
-# Run demonstration
+### 2. Run Full Multi-Seed Benchmark
+```bash
+# Run benchmark across Cora & Citeseer over 5 seeds
 python demo.py
+
+# Run benchmark in explicit synthetic mode (offline / CI)
+python demo.py --synthetic
+```
+
+### 3. Single Model Training & Evaluation
+```bash
+# Train GraphSAGE on Cora
+python scripts/train.py --dataset Cora --model graphsage --epochs 200
+
+# Evaluate saved checkpoint
+python scripts/evaluate.py --dataset Cora --model graphsage --checkpoint results/weights/best_model.pth
+```
+
+### 4. Run PyTest Suite
+```bash
+python -m pytest tests/ -v
 ```
 
 ---
 
-## 👤 Author
-**Shivangi Srivastava**  
-MS in Artificial Intelligence @ NJIT  
-[LinkedIn Profile](https://www.linkedin.com/in/shivangisrivastava013/) | [Portfolio](https://shivangisrivastava013.github.io/shivangi-portfolio/)
+## 🐳 Docker Deployment
+
+```bash
+# Build Docker Image
+docker build -t gnn-citation-classification:latest .
+
+# Run Containerized Benchmark
+docker run --rm gnn-citation-classification:latest
+```
+
+---
+
+## 🛠️ Repository Structure
+
+```text
+GNN-Citation-Network-Classification/
+├── configs/                  # YAML dataset & training hyperparameter configs
+│   ├── cora.yaml
+│   ├── citeseer.yaml
+│   └── pubmed.yaml
+├── demo.py                   # Main benchmark entrypoint script
+├── Dockerfile                # Container deployment specification
+├── gnn_model/                # Core Package
+│   ├── __init__.py
+│   ├── datasets.py           # Planetoid dataset loader & SyntheticCitationGraph
+│   ├── models.py             # MLPNet, GCNNet, GraphSAGENet definitions
+│   ├── trainer.py            # GNNTrainer with validation early-stopping
+│   ├── evaluator.py          # GNNEvaluator (Loss, Accuracy, F1, Latency)
+│   ├── experiment.py         # Multi-seed BenchmarkRunner engine
+│   └── utils.py              # Matplotlib/Seaborn visualization utilities
+├── pyproject.toml            # Project quality & build metadata
+├── requirements.txt          # Python dependencies
+├── results/                  # Generated benchmark logs & visualization plots
+│   ├── benchmark_results.json
+│   ├── benchmark_summary.csv
+│   ├── accuracy_comparison.png
+│   ├── f1_comparison.png
+│   └── training_curves.png
+└── tests/                    # Pytest test suite
+    ├── test_datasets.py
+    ├── test_models.py
+    ├── test_reproducibility.py
+    └── test_trainer_evaluator.py
+```
+
+---
+
+## 📜 License
+
+Distributed under the [MIT License](LICENSE).

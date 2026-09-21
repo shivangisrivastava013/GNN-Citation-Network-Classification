@@ -1,10 +1,16 @@
-"""
-GNN Citation Network Node Classification Framework
-Author: Shivangi Srivastava (MS in AI @ NJIT)
-"""
+from gnn_model.datasets import SyntheticCitationGraph, load_planetoid_dataset
+from gnn_model.evaluator import GNNEvaluator
+from gnn_model.experiment import BenchmarkRunner
+from gnn_model.models import GCNNet, GraphSAGENet, MLPNet
+from gnn_model.trainer import GNNTrainer
 
-__version__ = "1.0.0"
-__author__ = "Shivangi Srivastava"
-
-from .models import GCNNet, GraphSAGENet
-from .dataset import load_cora_dataset
+__all__ = [
+    "BenchmarkRunner",
+    "GCNNet",
+    "GNNEvaluator",
+    "GNNTrainer",
+    "GraphSAGENet",
+    "MLPNet",
+    "SyntheticCitationGraph",
+    "load_planetoid_dataset",
+]

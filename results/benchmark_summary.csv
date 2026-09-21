@@ -1,0 +1,7 @@
+dataset,model,test_acc_mean,test_acc_std,test_macro_f1_mean,test_macro_f1_std,test_weighted_f1_mean,test_weighted_f1_std,training_time_s_mean,inference_latency_ms_mean
+Cora,MLP,0.5576,0.0096,0.5472,0.0044,0.5604,0.0108,0.55,3.11
+Cora,GCN,0.8072,0.0093,0.8007,0.0089,0.8082,0.0091,1.45,9.79
+Cora,GraphSAGE,0.7942,0.0047,0.7876,0.0063,0.7953,0.0051,2.54,23.16
+Citeseer,MLP,0.5352,0.0127,0.5127,0.0142,0.5402,0.0123,1.27,10.93
+Citeseer,GCN,0.682,0.0124,0.6457,0.0106,0.6827,0.0122,2.08,18.05
+Citeseer,GraphSAGE,0.683,0.0051,0.6474,0.0045,0.6865,0.004,6.85,53.68
